@@ -1,0 +1,162 @@
+---
+title: "BIN371_m1"
+output: pdf_document
+date: "2025-08-08"
+---
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+
+  library(tidyverse)   # dplyr, ggplot2, readr, purrr, tidyr
+
+```
+
+```{r load-csvs}
+df1 <- read.csv("anthropometry_national_zaf.csv")
+df2 <- read.csv("literacy_national_zaf.csv")
+df3 <- read.csv("maternal-mortality_national_zaf.csv")
+df4 <- read.csv("symptoms-of-acute-respiratory-infection-ari_national_zaf.csv")
+
+df_list <- list(df1, df2, df3, df4)
+```
+
+```{r helpers-original}
+check_duplicates <- function(data, show = TRUE) {
+  duplicate_rows <- data[duplicated(data), ]
+  if (show) {
+    if (nrow(duplicate_rows) > 0) {
+      cat("Duplicates found:\n")
+      print(duplicate_rows)
+    } else {
+      cat("No duplicate rows found.\n")
+    }
+  }
+  invisible(duplicate_rows)
+}
+
+check_empty_values <- function(data) {
+  na_counts <- sapply(data, function(x) sum(is.na(x)))
+  empty_counts <- sapply(data, function(x) sum(x == "", na.rm = TRUE))
+  string_na_counts <- sapply(data, function(x) sum(x == "NA", na.rm = TRUE))
+  result <- data.frame(
+    Column = names(data),
+    NA_Count = na_counts,
+    Empty_String_Count = empty_counts,
+    "Text_'NA'_Count" = string_na_counts
+  )
+  result <- result[rowSums(result[,-1]) > 0, ]
+  if (nrow(result) == 0) {
+    cat("No missing or empty values found.\n")
+  } else {
+    cat("Columns with missing/empty values:\n")
+    print(result)
+  }
+  invisible(result)
+}
+```
+
+```{r print-names}
+cat("Dataframe Column Names\n")
+for(i in seq_along(df_list)){
+  cat("Dataframe", i, "\n")
+  print(names(df_list[[i]]))
+  cat("\n")
+}
+```
+
+```{r check-duplicates}
+cat("Dataframe Duplication Tests\n")
+for(i in seq_along(df_list)){
+  cat("Dataframe", i, "\n")
+  check_duplicates(df_list[[i]])
+  cat("\n")
+}
+```
+
+```{r check-empty}
+cat("Dataframe Empty Values Check\n")
+for(i in seq_along(df_list)){
+  cat("Dataframe", i, "\n")
+  check_empty_values(df_list[[i]])
+  cat("\n")
+}
+```
+
+```{r standardize-and-numeric}
+clean_df <- function(df){
+  names(df) <- gsub("\\s+", "_", names(df))
+  names(df) <- gsub("[^A-Za-z0-9_]", "", names(df))
+  if ("Value" %in% names(df)) {
+    df$Value_num <- readr::parse_number(as.character(df$Value))
+  }
+  df
+}
+
+df_list <- lapply(df_list, clean_df)
+
+df_names <- c("Anthropometry","Literacy","MaternalMortality","ARI_Symptoms")
+names(df_list) <- df_names
+
+for (nm in names(df_list)) {
+  df <- df_list[[nm]]
+  if ("Value" %in% names(df)) {
+    bad <- suppressWarnings(sum(is.na(as.numeric(df$Value)) & !is.na(df$Value)))
+    cat(nm, "- non-numeric Value entries initially:", bad, "\n")
+  }
+}
+```
+
+```{r descriptive-stats}
+library(dplyr)
+
+stats_list <- lapply(df_list, function(df){
+  if ("Value_num" %in% names(df)) {
+    tibble(
+      Mean = mean(df$Value_num, na.rm = TRUE),
+      Median = median(df$Value_num, na.rm = TRUE),
+      Variance = var(df$Value_num, na.rm = TRUE),
+      Missing = sum(is.na(df$Value_num))
+    )
+  } else {
+    tibble(Mean=NA, Median=NA, Variance=NA, Missing=NA)
+  }
+})
+
+names(stats_list) <- names(df_list)
+stats_list
+```
+
+```{r visualizations}
+library(ggplot2)
+
+for (nm in names(df_list)) {
+  df <- df_list[[nm]]
+  if ("Value_num" %in% names(df)) {
+    print(
+      ggplot(df, aes(x = Value_num)) +
+        geom_histogram(binwidth = 5, fill = "skyblue", color = "black") +
+        labs(title = paste("Distribution of Values -", nm),
+             x = "Value", y = "Count")
+    )
+  }
+}
+```
+
+```{r boxplots}
+for (nm in names(df_list)) {
+  df <- df_list[[nm]]
+  if ("Value_num" %in% names(df)) {
+    print(
+      ggplot(df, aes(y = Value_num)) +
+        geom_boxplot(fill = "orange", color = "black") +
+        labs(title = paste("Boxplot of Values -", nm),
+             y = "Value")
+    )
+  }
+}
+```
