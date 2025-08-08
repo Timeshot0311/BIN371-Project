@@ -1,0 +1,5 @@
+"Dataset","Metric","Min","Mean","Median","Max","SD"
+"Anthropometry","Value_num",-1.1,663.767567567568,13.3,3405,1265.5961300804
+"Literacy","Value_num",0,1364.555,42.1,11805,3203.73602951551
+"MaternalMortality","Value_num",0.005,17881.520952381,97,123738,39766.9602335623
+"ARI_Symptoms","Value_num",3.1,1159.34615384615,101.95,4797,1573.41764658485

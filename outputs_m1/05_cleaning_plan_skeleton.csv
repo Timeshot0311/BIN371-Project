@@ -1,0 +1,5 @@
+"Dataset","Action","Reason"
+"Anthropometry","TBD","e.g., drop rows with NA in Value_num; unify Sex levels"
+"Literacy","TBD","e.g., keep relevant Age groups; standardize Region names"
+"MaternalMortality","TBD","e.g., impute small NA with median; remove obvious data-entry outliers"
+"ARI_Symptoms","TBD","e.g., filter to recent Period; encode Subgroup consistently"
