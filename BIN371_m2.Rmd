@@ -1,25 +1,25 @@
 ---
 title: "BIN371_m2"
-output: html_document
+output:
+  pdf_document: default
+  html_document: default
 date: "2025-08-10"
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
+
 
 ---
 
-## 1. Overview (What This Milestone Delivers)
+## 1) Overview
 
 This document completes Milestone 2 by:
-- Describing the selected datasets and final columns (**Data Description**).
-- Justifying inclusion/exclusion rules (**Data Selection**).
-- Cleaning and standardizing the data; reporting missingness, duplicates, and outliers (**Data Cleaning Process**).
-- Running basic statistical tests to inform which attributes matter (**Attribute/Feature Selection**).
-- Encoding, scaling, optional winsorization, and generating train/test splits (**Data Transformations & Aggregation**).
+- Describing datasets and final columns (Data Description)
+- Stating inclusion/exclusion rules (Data Selection)
+- Cleaning, imputing, and standardising data (Data Cleaning Process)
+- Running feature selection tests (Attribute/Feature Selection)
+- Transformations, one-hot matrices, and 70/30 splits (Transformations & Aggregation)
 
-All cleaned CSVs and train/test matrices are written to `outputs_m2/`.
+All outputs go to `outputs_m2/`.
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
@@ -29,7 +29,7 @@ suppressWarnings(suppressMessages({
 }))
 ```
 
-## 2. Load Data
+## 2) Load Data
 
 ```{r load-data}
 # Adjust paths if your CSVs live elsewhere
@@ -49,7 +49,7 @@ out_dir <- "outputs_m2"
 if (!dir.exists(out_dir)) dir.create(out_dir, recursive = TRUE)
 ```
 
-## 3. Standardize Columns & Create `Value_num`
+## 3) Standardize Columns & Create `Value_num`
 
 ```{r standardize-and-numeric}
 # Standardize names + parse Value -> Value_num (handles "12%", "1,234", etc.)
@@ -76,7 +76,7 @@ for (nm in names(df_list)) {
 }
 ```
 
-## 4. Data Description (Current Shapes & Key Columns)
+## 4) Data Description (Shapes & Columns)
 
 ```{r data-description}
 dims <- tibble(
@@ -95,12 +95,10 @@ knitr::kable(dims, caption = "Dataset Dimensions (Before Selection)")
 knitr::kable(col_preview, caption = "Column Preview (First 8 per Dataset)")
 ```
 
-## 5. Data Selection (Inclusion/Exclusion Rules)
+## 5) Data Selection (Inclusion/Exclusion Rules)
 
-**Rule intent:** keep fields typically useful for health segmentation and modelling; drop redundant or low-quality columns.
-
-- **Keep (if present):** `Indicator`, `Value`, `Value_num`, `Sex`, `Age`, `Region`, `Period`, `Subgroup`.
-- **Drop:** free-text/comments, identifiers with zero variance, and columns with **> 40% missing** unless mission–critical.
+**Keep (if present):** `Indicator`, `Value`, `Value_num`, `Sex`, `Age`, `Region`, `Period`, `Subgroup`.  
+**Drop:** free-text/comments, near-constant columns, and fields with **>40% missing** (unless essential).
 
 ```{r select-columns}
 keep_cols <- c("Indicator","Value","Value_num","Sex","Age","Region","Period","Subgroup")
@@ -109,7 +107,6 @@ prune_by_cols <- function(df) {
   cols <- intersect(keep_cols, names(df))
   df[, cols, drop = FALSE]
 }
-
 df_sel <- lapply(df_list, prune_by_cols)
 
 # Missing rate per column
@@ -124,26 +121,24 @@ col_missing_rate <- function(df) {
 missing_reports <- purrr::imap(df_sel, ~col_missing_rate(.x) %>% mutate(Dataset = .y))
 missing_overview <- dplyr::bind_rows(missing_reports)
 
-# Drop columns with > 40% missing unless they are on a small list of essentials
-essentials <- c("Indicator","Value_num")  # keep if available
+# Drop columns with > 40% missing unless essential
+essentials <- c("Indicator","Value_num")
 drop_by_missing <- function(df, threshold = 40){
   rates <- 100 * sapply(df, function(x) sum(is.na(x))) / max(1, nrow(df))
   keep <- names(df)[rates <= threshold | names(df) %in% essentials]
   df[, keep, drop = FALSE]
 }
-
 df_sel <- lapply(df_sel, drop_by_missing, threshold = 40)
 
 knitr::kable(head(missing_overview, 30), caption = "Missingness Overview (Top 30 Rows)")
 ```
 
-## 6. Data Cleaning Process
+## 6) Data Cleaning Process
 
-Actions we perform:
-- Remove **exact duplicates**
-- **Impute** `Value_num` by **median within (Indicator × Sex)** where possible; otherwise indicator-level or global median
-- Optional **winsorization** (clip extreme outliers at 1st/99th percentiles) when appropriate
-- Standardize categorical types (factors)
+- Remove exact duplicates  
+- Impute `Value_num` by median within `(Indicator × Sex)` → then `Indicator` → global fallback  
+- Optional winsorization of `Value_num` at 1st/99th percentiles  
+- Cast categorical fields to factors; build `Value_scaled`
 
 ```{r clean-data}
 # 6.1 Remove exact duplicates
@@ -152,7 +147,7 @@ df_clean <- lapply(df_sel, function(df) df[!duplicated(df), , drop = FALSE])
 # 6.2 Impute Value_num
 impute_group_median <- function(df) {
   if (!"Value_num" %in% names(df)) return(df)
-  # 1) try Indicator x Sex
+  # by Indicator x Sex
   if (all(c("Indicator","Sex") %in% names(df))) {
     df <- df %>%
       group_by(Indicator, Sex) %>%
@@ -161,7 +156,7 @@ impute_group_median <- function(df) {
                                 Value_num)) %>%
       ungroup()
   }
-  # 2) if still NA, try Indicator-only
+  # by Indicator
   if ("Indicator" %in% names(df)) {
     df <- df %>%
       group_by(Indicator) %>%
@@ -170,7 +165,7 @@ impute_group_median <- function(df) {
                                 Value_num)) %>%
       ungroup()
   }
-  # 3) global fallback
+  # global fallback
   if (any(is.na(df$Value_num))) {
     gmed <- median(df$Value_num, na.rm = TRUE)
     df$Value_num[is.na(df$Value_num)] <- gmed
@@ -179,12 +174,11 @@ impute_group_median <- function(df) {
 }
 df_clean <- lapply(df_clean, impute_group_median)
 
-# 6.3 Winsorize (optional) to limit extreme outliers (only if Value_num exists)
+# 6.3 Winsorize (optional)
 winsorize <- function(x, p = c(0.01, 0.99)){
   qs <- quantile(x, probs = p, na.rm = TRUE)
   x <- pmax(x, qs[1]); x <- pmin(x, qs[2]); x
 }
-
 df_clean <- lapply(df_clean, function(df){
   if ("Value_num" %in% names(df) && sum(!is.na(df$Value_num)) > 10) {
     df$Value_winz <- winsorize(df$Value_num)
@@ -192,7 +186,7 @@ df_clean <- lapply(df_clean, function(df){
   df
 })
 
-# 6.4 Cast categorical columns to factor & build scaled numeric
+# 6.4 Cast factors & scale
 prep_factors_scale <- function(df){
   for (v in c("Sex","Age","Region","Subgroup","Indicator","Period")){
     if (v %in% names(df)) df[[v]] <- as.factor(df[[v]])
@@ -210,42 +204,60 @@ df_clean <- lapply(df_clean, prep_factors_scale)
 purrr::iwalk(df_clean, ~write.csv(.x, file.path(out_dir, paste0("clean_", .y, ".csv")), row.names = FALSE))
 ```
 
-## 7. Attribute / Feature Selection
+## 7) Attribute / Feature Selection
 
-We use:
-- **Spearman** correlation (monotonic) between numeric predictors and `Value_scaled`.
-- **Kruskal–Wallis** tests for categorical predictors vs `Value_scaled`.
+- **Spearman** for numeric predictors vs `Value_scaled` (robust if none exist)  
+- **Kruskal–Wallis** for categorical predictors vs `Value_scaled`  
+- Optionally create `Period_num` as a numeric proxy to have at least one numeric predictor
 
 ```{r feature-selection}
-# Helper: collect numeric predictors (excluding target derivations)
+# Helper: numeric predictors (excluding target variants)
 num_preds <- function(df){
   nums <- names(df)[sapply(df, is.numeric)]
   setdiff(nums, c("Value_num","Value_winz","Value_scaled"))
 }
 
-# Spearman
+# OPTIONAL numeric 'Period_num' to enable at least one numeric predictor
+df_clean <- lapply(df_clean, function(df){
+  if ("Period" %in% names(df) && !("Period_num" %in% names(df))) {
+    df$Period_num <- as.numeric(df$Period)  # encoded levels; interpret cautiously
+  }
+  df
+})
+
+# Spearman (robust to empty results)
 spearman_report <- function(df, name){
   out <- tibble()
   if ("Value_scaled" %in% names(df)) {
-    for (nm in num_preds(df)) {
-      x <- df[[nm]]
-      if (length(unique(na.omit(x))) > 5) {
-        ct <- suppressWarnings(cor.test(df$Value_scaled, x, method = "spearman"))
-        out <- bind_rows(out, tibble(Predictor = nm, Rho = unname(ct$estimate), P = ct$p.value))
+    preds <- num_preds(df)
+    if (length(preds) > 0) {
+      for (nm in preds) {
+        x <- df[[nm]]
+        if (length(unique(na.omit(x))) > 5) {
+          ct <- suppressWarnings(cor.test(df$Value_scaled, x, method = "spearman"))
+          out <- bind_rows(out, tibble(Predictor = nm, Rho = unname(ct$estimate), P = ct$p.value))
+        }
       }
     }
   }
+  if (nrow(out) == 0) out <- tibble(Predictor = NA_character_, Rho = NA_real_, P = NA_real_)
   out %>% mutate(Dataset = name)
 }
-
 spearman_all <- purrr::imap_dfr(df_clean, spearman_report)
-knitr::kable(head(arrange(spearman_all, P), 15), caption = "Top Numeric Predictors by Spearman (smallest p-values)")
 
-# Kruskal–Wallis for factors
+if ("P" %in% names(spearman_all) && any(!is.na(spearman_all$P))) {
+  knitr::kable(dplyr::arrange(spearman_all, P) %>% head(15),
+               caption = "Top Numeric Predictors by Spearman (smallest p-values)")
+} else {
+  knitr::kable(spearman_all,
+               caption = "Spearman results (none available — no eligible numeric predictors)")
+}
+
+# Kruskal–Wallis (categorical vs Value_scaled)
 kw_report <- function(df, name){
-  cats <- names(df)[sapply(df, is.factor)]
   out <- tibble()
   if ("Value_scaled" %in% names(df)) {
+    cats <- names(df)[sapply(df, is.factor)]
     for (nm in cats) {
       if (length(unique(na.omit(df[[nm]]))) >= 2) {
         kt <- suppressWarnings(kruskal.test(Value_scaled ~ df[[nm]], data = df))
@@ -253,22 +265,26 @@ kw_report <- function(df, name){
       }
     }
   }
+  if (nrow(out) == 0) out <- tibble(Variable = NA_character_, KW_ChiSq = NA_real_, P = NA_real_)
   out %>% mutate(Dataset = name)
 }
-
 kw_all <- purrr::imap_dfr(df_clean, kw_report)
-knitr::kable(head(arrange(kw_all, P), 15), caption = "Top Categorical Predictors by Kruskal–Wallis (smallest p-values)")
+
+if ("P" %in% names(kw_all) && any(!is.na(kw_all$P))) {
+  knitr::kable(dplyr::arrange(kw_all, P) %>% head(15),
+               caption = "Top Categorical Predictors by Kruskal–Wallis (smallest p-values)")
+} else {
+  knitr::kable(kw_all, caption = "Kruskal–Wallis results (none available)")
+}
 ```
 
-## 8. Data Transformations & Aggregation (One-Hot + Split)
-
-We produce design matrices for modelling and create a **70/30** train/test split, saved as RDS.
+## 8) Transformations & Split (One-Hot + 70/30)
 
 ```{r transform-and-split}
 # One-hot encode via model.matrix; Value_scaled is the numeric response proxy
 one_hot_mats <- lapply(df_clean, function(df){
   if (!"Value_scaled" %in% names(df)) return(NULL)
-  mm <- model.matrix(Value_scaled ~ . - Value - Value_num - Value_winz, data = df)  # drops raw Value strings
+  mm <- model.matrix(Value_scaled ~ . - Value - Value_num - Value_winz, data = df)
   list(
     X = as.matrix(mm),
     y = as.numeric(df$Value_scaled)
@@ -278,10 +294,12 @@ one_hot_mats <- lapply(df_clean, function(df){
 dir.create(out_dir, showWarnings = FALSE)
 set.seed(42)
 
-split_and_save <- function(name, mat_list){
+# NOTE: iwalk passes (value, name), so function must be (mat_list, name)
+split_and_save <- function(mat_list, name){
   if (is.null(mat_list)) return(invisible(NULL))
   n <- length(mat_list$y)
-  idx <- sample(seq_len(n), size = max(1, floor(0.7*n)))
+  if (n < 2) return(invisible(NULL))  # nothing to split
+  idx <- sample(seq_len(n), size = max(1, floor(0.7 * n)))
   train <- list(X = mat_list$X[idx, , drop = FALSE], y = mat_list$y[idx])
   test  <- list(X = mat_list$X[-idx, , drop = FALSE], y = mat_list$y[-idx])
   saveRDS(train, file.path(out_dir, paste0("train_", name, ".rds")))
@@ -292,7 +310,7 @@ split_and_save <- function(name, mat_list){
 purrr::iwalk(one_hot_mats, split_and_save)
 ```
 
-## 9. Before/After Quality Snapshot
+## 9) Before/After Quality Snapshot
 
 ```{r quality-snapshot}
 # Missingness after cleaning
@@ -303,7 +321,7 @@ clean_missing_reports <- purrr::imap(df_clean, ~tibble(
 ))
 knitr::kable(clean_missing_reports, caption = "Missingness After Cleaning (Total NA counts)")
 
-# Simple outlier count (IQR) on Value_num (pre-winsor) if present
+# Outliers (IQR) count on Value_num (pre-winsor) if present
 iqr_flags <- function(x){
   q1 <- quantile(x, 0.25, na.rm=TRUE); q3 <- quantile(x, 0.75, na.rm=TRUE); i <- q3-q1
   (x < (q1 - 1.5*i)) | (x > (q3 + 1.5*i))
@@ -315,17 +333,13 @@ outlier_report <- purrr::imap_dfr(df_clean, function(df, nm){
 knitr::kable(outlier_report, caption = "Outliers (IQR) Count on Value_num (Pre-Winsor)")
 ```
 
-## 10. What to Submit (Milestone 2)
+## 10) Submission Notes
 
-- **Report** (this Rmd rendered to HTML/PDF) covering:
-  - Data Description (dims + key fields kept).
-  - Data Selection rules and rationale.
-  - Data Cleaning (missingness before/after, duplicates removed, outlier policy).
-  - Feature Selection results (Spearman & Kruskal lists; 1–2 lines of interpretation each).
-  - Transformations (encoding, scaling, winsorization policy) and **Train/Test** procedure.
-- **Files in `outputs_m2/`:**
-  - `clean_*.csv` for each dataset.
-  - `train_*.rds` and `test_*.rds` for modelling in Milestone 3.
+- Include this knitted report.
+- Include `outputs_m2/` contents:
+  - `clean_*.csv` (cleaned datasets)
+  - `train_*.rds` and `test_*.rds` (design matrices for Milestone 3)
+- In your write-up: explain rules, justify thresholds, and interpret the top factors (from KW / Spearman if any).
 
 ```{r done}
 cat("\nMilestone 2 complete.\nOutputs written to: ", normalizePath(out_dir), "\n")
