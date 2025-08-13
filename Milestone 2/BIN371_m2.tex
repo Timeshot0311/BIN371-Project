@@ -1,0 +1,653 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\usepackage{amsmath,amssymb}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\usepackage[margin=1in]{geometry}
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{longtable,booktabs,array}
+\usepackage{calc} % for calculating minipage widths
+% Correct order of tables after \paragraph or \subparagraph
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd\longtable{\par}{\if@noskipsec\mbox{}\fi\par}{}{}
+\makeatother
+% Allow footnotes in longtable head/foot
+\IfFileExists{footnotehyper.sty}{\usepackage{footnotehyper}}{\usepackage{footnote}}
+\makesavenoteenv{longtable}
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  pdftitle={BIN371\_m2},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\title{BIN371\_m2}
+\author{}
+\date{\vspace{-2.5em}2025-08-10}
+
+\begin{document}
+\maketitle
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\subsection{1) Overview}\label{overview}
+
+This document completes Milestone 2 by: - Describing datasets and final
+columns (Data Description) - Stating inclusion/exclusion rules (Data
+Selection) - Cleaning, imputing, and standardising data (Data Cleaning
+Process) - Running feature selection tests (Attribute/Feature Selection)
+- Transformations, one-hot matrices, and 70/30 splits (Transformations
+\& Aggregation)
+
+All outputs go to \texttt{outputs\_m2/}, `testdata\_m2/'.
+`traindata\_m2/'.
+
+\subsection{2) Load Data}\label{load-data}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{paths }\OtherTok{\textless{}{-}} \FunctionTok{list}\NormalTok{(}
+  \AttributeTok{Anthropometry     =} \StringTok{"Datasets/anthropometry\_national\_zaf.csv"}\NormalTok{,}
+  \AttributeTok{Literacy          =} \StringTok{"Datasets/literacy\_national\_zaf.csv"}\NormalTok{,}
+  \AttributeTok{MaternalMortality =} \StringTok{"Datasets/maternal{-}mortality\_national\_zaf.csv"}\NormalTok{,}
+  \AttributeTok{ARI\_Symptoms      =} \StringTok{"Datasets/symptoms{-}of{-}acute{-}respiratory{-}infection{-}ari\_national\_zaf.csv"}
+\NormalTok{)}
+
+\NormalTok{read\_base }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(p) }\FunctionTok{read.csv}\NormalTok{(p, }\AttributeTok{stringsAsFactors =} \ConstantTok{FALSE}\NormalTok{, }\AttributeTok{check.names =} \ConstantTok{FALSE}\NormalTok{)}
+\NormalTok{df\_list\_raw }\OtherTok{\textless{}{-}} \FunctionTok{lapply}\NormalTok{(paths, read\_base)}
+\FunctionTok{names}\NormalTok{(df\_list\_raw) }\OtherTok{\textless{}{-}} \FunctionTok{names}\NormalTok{(paths)}
+
+\CommentTok{\# Output directories}
+\NormalTok{out\_dir }\OtherTok{\textless{}{-}} \StringTok{"Clean{-}csv\_m2"}
+\ControlFlowTok{if}\NormalTok{ (}\SpecialCharTok{!}\FunctionTok{dir.exists}\NormalTok{(out\_dir)) }\FunctionTok{dir.create}\NormalTok{(out\_dir, }\AttributeTok{recursive =} \ConstantTok{TRUE}\NormalTok{)}
+
+\NormalTok{test\_out\_dir }\OtherTok{\textless{}{-}} \StringTok{"Test{-}data\_m2"}
+\ControlFlowTok{if}\NormalTok{ (}\SpecialCharTok{!}\FunctionTok{dir.exists}\NormalTok{(test\_out\_dir)) }\FunctionTok{dir.create}\NormalTok{(test\_out\_dir, }\AttributeTok{recursive =} \ConstantTok{TRUE}\NormalTok{)}
+
+\NormalTok{train\_out\_dir }\OtherTok{\textless{}{-}} \StringTok{"Training{-}data\_m2"}
+\ControlFlowTok{if}\NormalTok{ (}\SpecialCharTok{!}\FunctionTok{dir.exists}\NormalTok{(train\_out\_dir)) }\FunctionTok{dir.create}\NormalTok{(train\_out\_dir, }\AttributeTok{recursive =} \ConstantTok{TRUE}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\subsection{\texorpdfstring{3) Standardize Columns \& Create
+\texttt{Value\_num}}{3) Standardize Columns \& Create Value\_num}}\label{standardize-columns-create-value_num}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Standardize names + parse Value {-}\textgreater{} Value\_num (handles "12\%", "1,234", etc.)}
+\NormalTok{clean\_df }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(df)\{}
+  \CommentTok{\# unify column names}
+  \FunctionTok{names}\NormalTok{(df) }\OtherTok{\textless{}{-}} \FunctionTok{gsub}\NormalTok{(}\StringTok{"}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{s+"}\NormalTok{, }\StringTok{"\_"}\NormalTok{, }\FunctionTok{names}\NormalTok{(df))}
+  \FunctionTok{names}\NormalTok{(df) }\OtherTok{\textless{}{-}} \FunctionTok{gsub}\NormalTok{(}\StringTok{"[\^{}A{-}Za{-}z0{-}9\_]"}\NormalTok{, }\StringTok{""}\NormalTok{, }\FunctionTok{names}\NormalTok{(df))}
+  \CommentTok{\# numeric extraction for Value}
+  \ControlFlowTok{if}\NormalTok{ (}\StringTok{"Value"} \SpecialCharTok{\%in\%} \FunctionTok{names}\NormalTok{(df)) \{}
+\NormalTok{    df}\SpecialCharTok{$}\NormalTok{Value\_num }\OtherTok{\textless{}{-}}\NormalTok{ readr}\SpecialCharTok{::}\FunctionTok{parse\_number}\NormalTok{(}\FunctionTok{as.character}\NormalTok{(df}\SpecialCharTok{$}\NormalTok{Value))}
+\NormalTok{  \}}
+\NormalTok{  df}
+\NormalTok{\}}
+
+\NormalTok{df\_list }\OtherTok{\textless{}{-}} \FunctionTok{lapply}\NormalTok{(df\_list\_raw, clean\_df)}
+
+\ControlFlowTok{for}\NormalTok{ (nm }\ControlFlowTok{in} \FunctionTok{names}\NormalTok{(df\_list)) \{}
+\NormalTok{  df }\OtherTok{\textless{}{-}}\NormalTok{ df\_list[[nm]]}
+  \ControlFlowTok{if}\NormalTok{ (}\StringTok{"Value"} \SpecialCharTok{\%in\%} \FunctionTok{names}\NormalTok{(df)) \{}
+\NormalTok{    bad }\OtherTok{\textless{}{-}} \FunctionTok{suppressWarnings}\NormalTok{(}\FunctionTok{sum}\NormalTok{(}\FunctionTok{is.na}\NormalTok{(}\FunctionTok{as.numeric}\NormalTok{(df}\SpecialCharTok{$}\NormalTok{Value)) }\SpecialCharTok{\&} \SpecialCharTok{!}\FunctionTok{is.na}\NormalTok{(df}\SpecialCharTok{$}\NormalTok{Value)))}
+    \FunctionTok{cat}\NormalTok{(nm, }\StringTok{"{-} non{-}numeric Value entries initially:"}\NormalTok{, bad, }\StringTok{"}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\NormalTok{  \}}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Anthropometry - non-numeric Value entries initially: 1 
+## Literacy - non-numeric Value entries initially: 1 
+## MaternalMortality - non-numeric Value entries initially: 1 
+## ARI_Symptoms - non-numeric Value entries initially: 1
+\end{verbatim}
+
+\subsection{4) Data Description (Shapes \&
+Columns)}\label{data-description-shapes-columns}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{dims }\OtherTok{\textless{}{-}} \FunctionTok{tibble}\NormalTok{(}
+  \AttributeTok{Dataset =} \FunctionTok{names}\NormalTok{(df\_list),}
+  \AttributeTok{Rows    =} \FunctionTok{sapply}\NormalTok{(df\_list, nrow),}
+  \AttributeTok{Columns =} \FunctionTok{sapply}\NormalTok{(df\_list, ncol)}
+\NormalTok{)}
+
+\CommentTok{\# Show first 8 column names for each dataset}
+\NormalTok{col\_preview }\OtherTok{\textless{}{-}}\NormalTok{ purrr}\SpecialCharTok{::}\FunctionTok{imap\_dfr}\NormalTok{(df\_list, }\SpecialCharTok{\textasciitilde{}}\FunctionTok{tibble}\NormalTok{(}
+  \AttributeTok{Dataset =}\NormalTok{ .y,}
+  \AttributeTok{Columns =} \FunctionTok{paste}\NormalTok{(}\FunctionTok{head}\NormalTok{(}\FunctionTok{names}\NormalTok{(.x), }\DecValTok{8}\NormalTok{), }\AttributeTok{collapse =} \StringTok{", "}\NormalTok{)}
+\NormalTok{))}
+
+\NormalTok{knitr}\SpecialCharTok{::}\FunctionTok{kable}\NormalTok{(dims, }\AttributeTok{caption =} \StringTok{"Dataset Dimensions (Before Selection)"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}lrr@{}}
+\caption{Dataset Dimensions (Before Selection)}\tabularnewline
+\toprule\noalign{}
+Dataset & Rows & Columns \\
+\midrule\noalign{}
+\endfirsthead
+\toprule\noalign{}
+Dataset & Rows & Columns \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Anthropometry & 38 & 30 \\
+Literacy & 21 & 30 \\
+MaternalMortality & 22 & 30 \\
+ARI\_Symptoms & 27 & 30 \\
+\end{longtable}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{knitr}\SpecialCharTok{::}\FunctionTok{kable}\NormalTok{(col\_preview, }\AttributeTok{caption =} \StringTok{"Column Preview (First 8 per Dataset)"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 2\tabcolsep) * \real{0.1765}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 2\tabcolsep) * \real{0.8235}}@{}}
+\caption{Column Preview (First 8 per Dataset)}\tabularnewline
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Dataset
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Columns
+\end{minipage} \\
+\midrule\noalign{}
+\endfirsthead
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Dataset
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Columns
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Anthropometry & ISO3, DataId, Indicator, Value, Precision,
+DHS\_CountryCode, CountryName, SurveyYear \\
+Literacy & ISO3, DataId, Indicator, Value, Precision, DHS\_CountryCode,
+CountryName, SurveyYear \\
+MaternalMortality & ISO3, DataId, Indicator, Value, Precision,
+DHS\_CountryCode, CountryName, SurveyYear \\
+ARI\_Symptoms & ISO3, DataId, Indicator, Value, Precision,
+DHS\_CountryCode, CountryName, SurveyYear \\
+\end{longtable}
+
+\subsection{5) Data Selection (Inclusion/Exclusion
+Rules)}\label{data-selection-inclusionexclusion-rules}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{keep\_cols }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\StringTok{"Indicator"}\NormalTok{,}\StringTok{"Value"}\NormalTok{,}\StringTok{"Value\_num"}\NormalTok{,}\StringTok{"Sex"}\NormalTok{,}\StringTok{"Age"}\NormalTok{,}\StringTok{"Region"}\NormalTok{,}\StringTok{"Period"}\NormalTok{,}\StringTok{"Subgroup"}\NormalTok{)}
+
+\NormalTok{prune\_by\_cols }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(df) \{}
+\NormalTok{  cols }\OtherTok{\textless{}{-}} \FunctionTok{intersect}\NormalTok{(keep\_cols, }\FunctionTok{names}\NormalTok{(df))}
+\NormalTok{  df[, cols, drop }\OtherTok{=} \ConstantTok{FALSE}\NormalTok{]}
+\NormalTok{\}}
+\NormalTok{df\_sel }\OtherTok{\textless{}{-}} \FunctionTok{lapply}\NormalTok{(df\_list, prune\_by\_cols)}
+
+\CommentTok{\# Missing rate per column}
+\NormalTok{col\_missing\_rate }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(df) \{}
+  \FunctionTok{tibble}\NormalTok{(}
+    \AttributeTok{Column     =} \FunctionTok{names}\NormalTok{(df),}
+    \AttributeTok{Missing    =} \FunctionTok{sapply}\NormalTok{(df, }\ControlFlowTok{function}\NormalTok{(x) }\FunctionTok{sum}\NormalTok{(}\FunctionTok{is.na}\NormalTok{(x))),}
+    \AttributeTok{PctMissing =} \FunctionTok{round}\NormalTok{(}\DecValTok{100} \SpecialCharTok{*} \FunctionTok{sapply}\NormalTok{(df, }\ControlFlowTok{function}\NormalTok{(x) }\FunctionTok{sum}\NormalTok{(}\FunctionTok{is.na}\NormalTok{(x))) }\SpecialCharTok{/} \FunctionTok{max}\NormalTok{(}\DecValTok{1}\NormalTok{, }\FunctionTok{nrow}\NormalTok{(df)), }\DecValTok{2}\NormalTok{)}
+\NormalTok{  ) }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{arrange}\NormalTok{(}\FunctionTok{desc}\NormalTok{(PctMissing))}
+\NormalTok{\}}
+
+\NormalTok{missing\_reports }\OtherTok{\textless{}{-}}\NormalTok{ purrr}\SpecialCharTok{::}\FunctionTok{imap}\NormalTok{(df\_sel, }\SpecialCharTok{\textasciitilde{}}\FunctionTok{col\_missing\_rate}\NormalTok{(.x) }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{mutate}\NormalTok{(}\AttributeTok{Dataset =}\NormalTok{ .y))}
+\NormalTok{missing\_overview }\OtherTok{\textless{}{-}}\NormalTok{ dplyr}\SpecialCharTok{::}\FunctionTok{bind\_rows}\NormalTok{(missing\_reports)}
+
+\CommentTok{\# Drop columns with \textgreater{} 40\% missing unless essential}
+\NormalTok{essentials }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\StringTok{"Indicator"}\NormalTok{,}\StringTok{"Value\_num"}\NormalTok{)}
+\NormalTok{drop\_by\_missing }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(df, }\AttributeTok{threshold =} \DecValTok{40}\NormalTok{)\{}
+\NormalTok{  rates }\OtherTok{\textless{}{-}} \DecValTok{100} \SpecialCharTok{*} \FunctionTok{sapply}\NormalTok{(df, }\ControlFlowTok{function}\NormalTok{(x) }\FunctionTok{sum}\NormalTok{(}\FunctionTok{is.na}\NormalTok{(x))) }\SpecialCharTok{/} \FunctionTok{max}\NormalTok{(}\DecValTok{1}\NormalTok{, }\FunctionTok{nrow}\NormalTok{(df))}
+\NormalTok{  keep }\OtherTok{\textless{}{-}} \FunctionTok{names}\NormalTok{(df)[rates }\SpecialCharTok{\textless{}=}\NormalTok{ threshold }\SpecialCharTok{|} \FunctionTok{names}\NormalTok{(df) }\SpecialCharTok{\%in\%}\NormalTok{ essentials]}
+\NormalTok{  df[, keep, drop }\OtherTok{=} \ConstantTok{FALSE}\NormalTok{]}
+\NormalTok{\}}
+\NormalTok{df\_sel }\OtherTok{\textless{}{-}} \FunctionTok{lapply}\NormalTok{(df\_sel, drop\_by\_missing, }\AttributeTok{threshold =} \DecValTok{40}\NormalTok{)}
+
+\NormalTok{knitr}\SpecialCharTok{::}\FunctionTok{kable}\NormalTok{(}\FunctionTok{head}\NormalTok{(missing\_overview, }\DecValTok{30}\NormalTok{), }\AttributeTok{caption =} \StringTok{"Missingness Overview (Top 30 Rows)"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}lrrl@{}}
+\caption{Missingness Overview (Top 30 Rows)}\tabularnewline
+\toprule\noalign{}
+Column & Missing & PctMissing & Dataset \\
+\midrule\noalign{}
+\endfirsthead
+\toprule\noalign{}
+Column & Missing & PctMissing & Dataset \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Value\_num & 1 & 2.63 & Anthropometry \\
+Indicator & 0 & 0.00 & Anthropometry \\
+Value & 0 & 0.00 & Anthropometry \\
+Value\_num & 1 & 4.76 & Literacy \\
+Indicator & 0 & 0.00 & Literacy \\
+Value & 0 & 0.00 & Literacy \\
+Value\_num & 1 & 4.55 & MaternalMortality \\
+Indicator & 0 & 0.00 & MaternalMortality \\
+Value & 0 & 0.00 & MaternalMortality \\
+Value\_num & 1 & 3.70 & ARI\_Symptoms \\
+Indicator & 0 & 0.00 & ARI\_Symptoms \\
+Value & 0 & 0.00 & ARI\_Symptoms \\
+\end{longtable}
+
+\subsection{6) Data Cleaning Process}\label{data-cleaning-process}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{df\_clean }\OtherTok{\textless{}{-}} \FunctionTok{lapply}\NormalTok{(df\_sel, }\ControlFlowTok{function}\NormalTok{(df) df[}\SpecialCharTok{!}\FunctionTok{duplicated}\NormalTok{(df), , }\AttributeTok{drop =} \ConstantTok{FALSE}\NormalTok{])}
+
+\NormalTok{impute\_group\_median }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(df) \{}
+  \ControlFlowTok{if}\NormalTok{ (}\SpecialCharTok{!}\StringTok{"Value\_num"} \SpecialCharTok{\%in\%} \FunctionTok{names}\NormalTok{(df)) }\FunctionTok{return}\NormalTok{(df)}
+  \CommentTok{\# by Indicator x Sex}
+  \ControlFlowTok{if}\NormalTok{ (}\FunctionTok{all}\NormalTok{(}\FunctionTok{c}\NormalTok{(}\StringTok{"Indicator"}\NormalTok{,}\StringTok{"Sex"}\NormalTok{) }\SpecialCharTok{\%in\%} \FunctionTok{names}\NormalTok{(df))) \{}
+\NormalTok{    df }\OtherTok{\textless{}{-}}\NormalTok{ df }\SpecialCharTok{\%\textgreater{}\%}
+      \FunctionTok{group\_by}\NormalTok{(Indicator, Sex) }\SpecialCharTok{\%\textgreater{}\%}
+      \FunctionTok{mutate}\NormalTok{(}\AttributeTok{Value\_num =} \FunctionTok{ifelse}\NormalTok{(}\FunctionTok{is.na}\NormalTok{(Value\_num),}
+                                \FunctionTok{median}\NormalTok{(Value\_num, }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{),}
+\NormalTok{                                Value\_num)) }\SpecialCharTok{\%\textgreater{}\%}
+      \FunctionTok{ungroup}\NormalTok{()}
+\NormalTok{  \}}
+  \CommentTok{\# by Indicator}
+  \ControlFlowTok{if}\NormalTok{ (}\StringTok{"Indicator"} \SpecialCharTok{\%in\%} \FunctionTok{names}\NormalTok{(df)) \{}
+\NormalTok{    df }\OtherTok{\textless{}{-}}\NormalTok{ df }\SpecialCharTok{\%\textgreater{}\%}
+      \FunctionTok{group\_by}\NormalTok{(Indicator) }\SpecialCharTok{\%\textgreater{}\%}
+      \FunctionTok{mutate}\NormalTok{(}\AttributeTok{Value\_num =} \FunctionTok{ifelse}\NormalTok{(}\FunctionTok{is.na}\NormalTok{(Value\_num),}
+                                \FunctionTok{median}\NormalTok{(Value\_num, }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{),}
+\NormalTok{                                Value\_num)) }\SpecialCharTok{\%\textgreater{}\%}
+      \FunctionTok{ungroup}\NormalTok{()}
+\NormalTok{  \}}
+  \CommentTok{\# global fallback}
+  \ControlFlowTok{if}\NormalTok{ (}\FunctionTok{any}\NormalTok{(}\FunctionTok{is.na}\NormalTok{(df}\SpecialCharTok{$}\NormalTok{Value\_num))) \{}
+\NormalTok{    gmed }\OtherTok{\textless{}{-}} \FunctionTok{median}\NormalTok{(df}\SpecialCharTok{$}\NormalTok{Value\_num, }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{)}
+\NormalTok{    df}\SpecialCharTok{$}\NormalTok{Value\_num[}\FunctionTok{is.na}\NormalTok{(df}\SpecialCharTok{$}\NormalTok{Value\_num)] }\OtherTok{\textless{}{-}}\NormalTok{ gmed}
+\NormalTok{  \}}
+\NormalTok{  df}
+\NormalTok{\}}
+\NormalTok{df\_clean }\OtherTok{\textless{}{-}} \FunctionTok{lapply}\NormalTok{(df\_clean, impute\_group\_median)}
+
+\CommentTok{\#Winsorize }
+\NormalTok{winsorize }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(x, }\AttributeTok{p =} \FunctionTok{c}\NormalTok{(}\FloatTok{0.01}\NormalTok{, }\FloatTok{0.99}\NormalTok{))\{}
+\NormalTok{  qs }\OtherTok{\textless{}{-}} \FunctionTok{quantile}\NormalTok{(x, }\AttributeTok{probs =}\NormalTok{ p, }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{)}
+\NormalTok{  x }\OtherTok{\textless{}{-}} \FunctionTok{pmax}\NormalTok{(x, qs[}\DecValTok{1}\NormalTok{]); x }\OtherTok{\textless{}{-}} \FunctionTok{pmin}\NormalTok{(x, qs[}\DecValTok{2}\NormalTok{]); x}
+\NormalTok{\}}
+\NormalTok{df\_clean }\OtherTok{\textless{}{-}} \FunctionTok{lapply}\NormalTok{(df\_clean, }\ControlFlowTok{function}\NormalTok{(df)\{}
+  \ControlFlowTok{if}\NormalTok{ (}\StringTok{"Value\_num"} \SpecialCharTok{\%in\%} \FunctionTok{names}\NormalTok{(df) }\SpecialCharTok{\&\&} \FunctionTok{sum}\NormalTok{(}\SpecialCharTok{!}\FunctionTok{is.na}\NormalTok{(df}\SpecialCharTok{$}\NormalTok{Value\_num)) }\SpecialCharTok{\textgreater{}} \DecValTok{10}\NormalTok{) \{}
+\NormalTok{    df}\SpecialCharTok{$}\NormalTok{Value\_winz }\OtherTok{\textless{}{-}} \FunctionTok{winsorize}\NormalTok{(df}\SpecialCharTok{$}\NormalTok{Value\_num)}
+\NormalTok{  \}}
+\NormalTok{  df}
+\NormalTok{\})}
+
+\CommentTok{\#Cast factors \& scale}
+\NormalTok{prep\_factors\_scale }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(df)\{}
+  \ControlFlowTok{for}\NormalTok{ (v }\ControlFlowTok{in} \FunctionTok{c}\NormalTok{(}\StringTok{"Sex"}\NormalTok{,}\StringTok{"Age"}\NormalTok{,}\StringTok{"Region"}\NormalTok{,}\StringTok{"Subgroup"}\NormalTok{,}\StringTok{"Indicator"}\NormalTok{,}\StringTok{"Period"}\NormalTok{))\{}
+    \ControlFlowTok{if}\NormalTok{ (v }\SpecialCharTok{\%in\%} \FunctionTok{names}\NormalTok{(df)) df[[v]] }\OtherTok{\textless{}{-}} \FunctionTok{as.factor}\NormalTok{(df[[v]])}
+\NormalTok{  \}}
+  \ControlFlowTok{if}\NormalTok{ (}\StringTok{"Value\_winz"} \SpecialCharTok{\%in\%} \FunctionTok{names}\NormalTok{(df)) \{}
+\NormalTok{    df}\SpecialCharTok{$}\NormalTok{Value\_scaled }\OtherTok{\textless{}{-}} \FunctionTok{as.numeric}\NormalTok{(}\FunctionTok{scale}\NormalTok{(df}\SpecialCharTok{$}\NormalTok{Value\_winz))}
+\NormalTok{  \} }\ControlFlowTok{else} \ControlFlowTok{if}\NormalTok{ (}\StringTok{"Value\_num"} \SpecialCharTok{\%in\%} \FunctionTok{names}\NormalTok{(df)) \{}
+\NormalTok{    df}\SpecialCharTok{$}\NormalTok{Value\_scaled }\OtherTok{\textless{}{-}} \FunctionTok{as.numeric}\NormalTok{(}\FunctionTok{scale}\NormalTok{(df}\SpecialCharTok{$}\NormalTok{Value\_num))}
+\NormalTok{  \}}
+\NormalTok{  df}
+\NormalTok{\}}
+\NormalTok{df\_clean }\OtherTok{\textless{}{-}} \FunctionTok{lapply}\NormalTok{(df\_clean, prep\_factors\_scale)}
+
+\NormalTok{purrr}\SpecialCharTok{::}\FunctionTok{iwalk}\NormalTok{(df\_clean, }\SpecialCharTok{\textasciitilde{}}\FunctionTok{write.csv}\NormalTok{(.x, }\FunctionTok{file.path}\NormalTok{(out\_dir, }\FunctionTok{paste0}\NormalTok{(}\StringTok{"clean\_"}\NormalTok{, .y, }\StringTok{".csv"}\NormalTok{)), }\AttributeTok{row.names =} \ConstantTok{FALSE}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\subsection{7) Attribute / Feature
+Selection}\label{attribute-feature-selection}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{num\_preds }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(df)\{}
+\NormalTok{  nums }\OtherTok{\textless{}{-}} \FunctionTok{names}\NormalTok{(df)[}\FunctionTok{sapply}\NormalTok{(df, is.numeric)]}
+  \FunctionTok{setdiff}\NormalTok{(nums, }\FunctionTok{c}\NormalTok{(}\StringTok{"Value\_num"}\NormalTok{,}\StringTok{"Value\_winz"}\NormalTok{,}\StringTok{"Value\_scaled"}\NormalTok{))}
+\NormalTok{\}}
+
+\NormalTok{df\_clean }\OtherTok{\textless{}{-}} \FunctionTok{lapply}\NormalTok{(df\_clean, }\ControlFlowTok{function}\NormalTok{(df)\{}
+  \ControlFlowTok{if}\NormalTok{ (}\StringTok{"Period"} \SpecialCharTok{\%in\%} \FunctionTok{names}\NormalTok{(df) }\SpecialCharTok{\&\&} \SpecialCharTok{!}\NormalTok{(}\StringTok{"Period\_num"} \SpecialCharTok{\%in\%} \FunctionTok{names}\NormalTok{(df))) \{}
+\NormalTok{    df}\SpecialCharTok{$}\NormalTok{Period\_num }\OtherTok{\textless{}{-}} \FunctionTok{as.numeric}\NormalTok{(df}\SpecialCharTok{$}\NormalTok{Period)  }\CommentTok{\# encoded levels; interpret cautiously}
+\NormalTok{  \}}
+\NormalTok{  df}
+\NormalTok{\})}
+
+\CommentTok{\# Spearman }
+\NormalTok{spearman\_report }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(df, name)\{}
+\NormalTok{  out }\OtherTok{\textless{}{-}} \FunctionTok{tibble}\NormalTok{()}
+  \ControlFlowTok{if}\NormalTok{ (}\StringTok{"Value\_scaled"} \SpecialCharTok{\%in\%} \FunctionTok{names}\NormalTok{(df)) \{}
+\NormalTok{    preds }\OtherTok{\textless{}{-}} \FunctionTok{num\_preds}\NormalTok{(df)}
+    \ControlFlowTok{if}\NormalTok{ (}\FunctionTok{length}\NormalTok{(preds) }\SpecialCharTok{\textgreater{}} \DecValTok{0}\NormalTok{) \{}
+      \ControlFlowTok{for}\NormalTok{ (nm }\ControlFlowTok{in}\NormalTok{ preds) \{}
+\NormalTok{        x }\OtherTok{\textless{}{-}}\NormalTok{ df[[nm]]}
+        \ControlFlowTok{if}\NormalTok{ (}\FunctionTok{length}\NormalTok{(}\FunctionTok{unique}\NormalTok{(}\FunctionTok{na.omit}\NormalTok{(x))) }\SpecialCharTok{\textgreater{}} \DecValTok{5}\NormalTok{) \{}
+\NormalTok{          ct }\OtherTok{\textless{}{-}} \FunctionTok{suppressWarnings}\NormalTok{(}\FunctionTok{cor.test}\NormalTok{(df}\SpecialCharTok{$}\NormalTok{Value\_scaled, x, }\AttributeTok{method =} \StringTok{"spearman"}\NormalTok{))}
+\NormalTok{          out }\OtherTok{\textless{}{-}} \FunctionTok{bind\_rows}\NormalTok{(out, }\FunctionTok{tibble}\NormalTok{(}\AttributeTok{Predictor =}\NormalTok{ nm, }\AttributeTok{Rho =} \FunctionTok{unname}\NormalTok{(ct}\SpecialCharTok{$}\NormalTok{estimate), }\AttributeTok{P =}\NormalTok{ ct}\SpecialCharTok{$}\NormalTok{p.value))}
+\NormalTok{        \}}
+\NormalTok{      \}}
+\NormalTok{    \}}
+\NormalTok{  \}}
+  \ControlFlowTok{if}\NormalTok{ (}\FunctionTok{nrow}\NormalTok{(out) }\SpecialCharTok{==} \DecValTok{0}\NormalTok{) out }\OtherTok{\textless{}{-}} \FunctionTok{tibble}\NormalTok{(}\AttributeTok{Predictor =} \ConstantTok{NA\_character\_}\NormalTok{, }\AttributeTok{Rho =} \ConstantTok{NA\_real\_}\NormalTok{, }\AttributeTok{P =} \ConstantTok{NA\_real\_}\NormalTok{)}
+\NormalTok{  out }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{mutate}\NormalTok{(}\AttributeTok{Dataset =}\NormalTok{ name)}
+\NormalTok{\}}
+\NormalTok{spearman\_all }\OtherTok{\textless{}{-}}\NormalTok{ purrr}\SpecialCharTok{::}\FunctionTok{imap\_dfr}\NormalTok{(df\_clean, spearman\_report)}
+
+\ControlFlowTok{if}\NormalTok{ (}\StringTok{"P"} \SpecialCharTok{\%in\%} \FunctionTok{names}\NormalTok{(spearman\_all) }\SpecialCharTok{\&\&} \FunctionTok{any}\NormalTok{(}\SpecialCharTok{!}\FunctionTok{is.na}\NormalTok{(spearman\_all}\SpecialCharTok{$}\NormalTok{P))) \{}
+\NormalTok{  knitr}\SpecialCharTok{::}\FunctionTok{kable}\NormalTok{(dplyr}\SpecialCharTok{::}\FunctionTok{arrange}\NormalTok{(spearman\_all, P) }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{head}\NormalTok{(}\DecValTok{15}\NormalTok{),}
+               \AttributeTok{caption =} \StringTok{"Top Numeric Predictors by Spearman (smallest p{-}values)"}\NormalTok{)}
+\NormalTok{\} }\ControlFlowTok{else}\NormalTok{ \{}
+\NormalTok{  knitr}\SpecialCharTok{::}\FunctionTok{kable}\NormalTok{(spearman\_all,}
+               \AttributeTok{caption =} \StringTok{"Spearman results (none available — no eligible numeric predictors)"}\NormalTok{)}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}lrrl@{}}
+\caption{Spearman results (none available --- no eligible numeric
+predictors)}\tabularnewline
+\toprule\noalign{}
+Predictor & Rho & P & Dataset \\
+\midrule\noalign{}
+\endfirsthead
+\toprule\noalign{}
+Predictor & Rho & P & Dataset \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+NA & NA & NA & Anthropometry \\
+NA & NA & NA & Literacy \\
+NA & NA & NA & MaternalMortality \\
+NA & NA & NA & ARI\_Symptoms \\
+\end{longtable}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Kruskal–Wallis }
+\NormalTok{kw\_report }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(df, name)\{}
+\NormalTok{  out }\OtherTok{\textless{}{-}} \FunctionTok{tibble}\NormalTok{()}
+  \ControlFlowTok{if}\NormalTok{ (}\StringTok{"Value\_scaled"} \SpecialCharTok{\%in\%} \FunctionTok{names}\NormalTok{(df)) \{}
+\NormalTok{    cats }\OtherTok{\textless{}{-}} \FunctionTok{names}\NormalTok{(df)[}\FunctionTok{sapply}\NormalTok{(df, is.factor)]}
+    \ControlFlowTok{for}\NormalTok{ (nm }\ControlFlowTok{in}\NormalTok{ cats) \{}
+      \ControlFlowTok{if}\NormalTok{ (}\FunctionTok{length}\NormalTok{(}\FunctionTok{unique}\NormalTok{(}\FunctionTok{na.omit}\NormalTok{(df[[nm]]))) }\SpecialCharTok{\textgreater{}=} \DecValTok{2}\NormalTok{) \{}
+\NormalTok{        kt }\OtherTok{\textless{}{-}} \FunctionTok{suppressWarnings}\NormalTok{(}\FunctionTok{kruskal.test}\NormalTok{(Value\_scaled }\SpecialCharTok{\textasciitilde{}}\NormalTok{ df[[nm]], }\AttributeTok{data =}\NormalTok{ df))}
+\NormalTok{        out }\OtherTok{\textless{}{-}} \FunctionTok{bind\_rows}\NormalTok{(out, }\FunctionTok{tibble}\NormalTok{(}\AttributeTok{Variable =}\NormalTok{ nm, }\AttributeTok{KW\_ChiSq =} \FunctionTok{unname}\NormalTok{(kt}\SpecialCharTok{$}\NormalTok{statistic), }\AttributeTok{P =}\NormalTok{ kt}\SpecialCharTok{$}\NormalTok{p.value))}
+\NormalTok{      \}}
+\NormalTok{    \}}
+\NormalTok{  \}}
+  \ControlFlowTok{if}\NormalTok{ (}\FunctionTok{nrow}\NormalTok{(out) }\SpecialCharTok{==} \DecValTok{0}\NormalTok{) out }\OtherTok{\textless{}{-}} \FunctionTok{tibble}\NormalTok{(}\AttributeTok{Variable =} \ConstantTok{NA\_character\_}\NormalTok{, }\AttributeTok{KW\_ChiSq =} \ConstantTok{NA\_real\_}\NormalTok{, }\AttributeTok{P =} \ConstantTok{NA\_real\_}\NormalTok{)}
+\NormalTok{  out }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{mutate}\NormalTok{(}\AttributeTok{Dataset =}\NormalTok{ name)}
+\NormalTok{\}}
+\NormalTok{kw\_all }\OtherTok{\textless{}{-}}\NormalTok{ purrr}\SpecialCharTok{::}\FunctionTok{imap\_dfr}\NormalTok{(df\_clean, kw\_report)}
+
+\ControlFlowTok{if}\NormalTok{ (}\StringTok{"P"} \SpecialCharTok{\%in\%} \FunctionTok{names}\NormalTok{(kw\_all) }\SpecialCharTok{\&\&} \FunctionTok{any}\NormalTok{(}\SpecialCharTok{!}\FunctionTok{is.na}\NormalTok{(kw\_all}\SpecialCharTok{$}\NormalTok{P))) \{}
+\NormalTok{  knitr}\SpecialCharTok{::}\FunctionTok{kable}\NormalTok{(dplyr}\SpecialCharTok{::}\FunctionTok{arrange}\NormalTok{(kw\_all, P) }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{head}\NormalTok{(}\DecValTok{15}\NormalTok{),}
+               \AttributeTok{caption =} \StringTok{"Top Categorical Predictors by Kruskal–Wallis (smallest p{-}values)"}\NormalTok{)}
+\NormalTok{\} }\ControlFlowTok{else}\NormalTok{ \{}
+\NormalTok{  knitr}\SpecialCharTok{::}\FunctionTok{kable}\NormalTok{(kw\_all, }\AttributeTok{caption =} \StringTok{"Kruskal–Wallis results (none available)"}\NormalTok{)}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}lrrl@{}}
+\caption{Top Categorical Predictors by Kruskal--Wallis (smallest
+p-values)}\tabularnewline
+\toprule\noalign{}
+Variable & KW\_ChiSq & P & Dataset \\
+\midrule\noalign{}
+\endfirsthead
+\toprule\noalign{}
+Variable & KW\_ChiSq & P & Dataset \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Indicator & 22.90079 & 0.0017738 & ARI\_Symptoms \\
+Indicator & 20.02415 & 0.0450105 & MaternalMortality \\
+Indicator & 36.83802 & 0.2957453 & Anthropometry \\
+Indicator & 20.00000 & 0.4579297 & Literacy \\
+\end{longtable}
+
+\subsection{8) Transformations \& Split (One-Hot +
+70/30)}\label{transformations-split-one-hot-7030}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{one\_hot\_mats }\OtherTok{\textless{}{-}} \FunctionTok{lapply}\NormalTok{(df\_clean, }\ControlFlowTok{function}\NormalTok{(df)\{}
+  \ControlFlowTok{if}\NormalTok{ (}\SpecialCharTok{!}\StringTok{"Value\_scaled"} \SpecialCharTok{\%in\%} \FunctionTok{names}\NormalTok{(df)) }\FunctionTok{return}\NormalTok{(}\ConstantTok{NULL}\NormalTok{)}
+\NormalTok{  mm }\OtherTok{\textless{}{-}} \FunctionTok{model.matrix}\NormalTok{(Value\_scaled }\SpecialCharTok{\textasciitilde{}}\NormalTok{ . }\SpecialCharTok{{-}}\NormalTok{ Value }\SpecialCharTok{{-}}\NormalTok{ Value\_num }\SpecialCharTok{{-}}\NormalTok{ Value\_winz, }\AttributeTok{data =}\NormalTok{ df)}
+  \FunctionTok{list}\NormalTok{(}
+    \AttributeTok{X =} \FunctionTok{as.matrix}\NormalTok{(mm),}
+    \AttributeTok{y =} \FunctionTok{as.numeric}\NormalTok{(df}\SpecialCharTok{$}\NormalTok{Value\_scaled)}
+\NormalTok{  )}
+\NormalTok{\})}
+
+\FunctionTok{dir.create}\NormalTok{(out\_dir, }\AttributeTok{showWarnings =} \ConstantTok{FALSE}\NormalTok{)}
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{42}\NormalTok{)}
+
+\NormalTok{split\_and\_save }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(mat\_list, name)\{}
+  \ControlFlowTok{if}\NormalTok{ (}\FunctionTok{is.null}\NormalTok{(mat\_list)) }\FunctionTok{return}\NormalTok{(}\FunctionTok{invisible}\NormalTok{(}\ConstantTok{NULL}\NormalTok{))}
+\NormalTok{  n }\OtherTok{\textless{}{-}} \FunctionTok{length}\NormalTok{(mat\_list}\SpecialCharTok{$}\NormalTok{y)}
+  \ControlFlowTok{if}\NormalTok{ (n }\SpecialCharTok{\textless{}} \DecValTok{2}\NormalTok{) }\FunctionTok{return}\NormalTok{(}\FunctionTok{invisible}\NormalTok{(}\ConstantTok{NULL}\NormalTok{))  }\CommentTok{\# nothing to split}
+\NormalTok{  idx }\OtherTok{\textless{}{-}} \FunctionTok{sample}\NormalTok{(}\FunctionTok{seq\_len}\NormalTok{(n), }\AttributeTok{size =} \FunctionTok{max}\NormalTok{(}\DecValTok{1}\NormalTok{, }\FunctionTok{floor}\NormalTok{(}\FloatTok{0.7} \SpecialCharTok{*}\NormalTok{ n)))}
+\NormalTok{  train }\OtherTok{\textless{}{-}} \FunctionTok{list}\NormalTok{(}\AttributeTok{X =}\NormalTok{ mat\_list}\SpecialCharTok{$}\NormalTok{X[idx, , }\AttributeTok{drop =} \ConstantTok{FALSE}\NormalTok{], }\AttributeTok{y =}\NormalTok{ mat\_list}\SpecialCharTok{$}\NormalTok{y[idx])}
+\NormalTok{  test  }\OtherTok{\textless{}{-}} \FunctionTok{list}\NormalTok{(}\AttributeTok{X =}\NormalTok{ mat\_list}\SpecialCharTok{$}\NormalTok{X[}\SpecialCharTok{{-}}\NormalTok{idx, , }\AttributeTok{drop =} \ConstantTok{FALSE}\NormalTok{], }\AttributeTok{y =}\NormalTok{ mat\_list}\SpecialCharTok{$}\NormalTok{y[}\SpecialCharTok{{-}}\NormalTok{idx])}
+  \FunctionTok{saveRDS}\NormalTok{(train, }\FunctionTok{file.path}\NormalTok{(train\_out\_dir, }\FunctionTok{paste0}\NormalTok{(}\StringTok{"train\_"}\NormalTok{, name, }\StringTok{".rds"}\NormalTok{)))}
+  \FunctionTok{saveRDS}\NormalTok{(test,  }\FunctionTok{file.path}\NormalTok{(test\_out\_dir, }\FunctionTok{paste0}\NormalTok{(}\StringTok{"test\_"}\NormalTok{,  name, }\StringTok{".rds"}\NormalTok{)))}
+  \FunctionTok{invisible}\NormalTok{(}\ConstantTok{TRUE}\NormalTok{)}
+\NormalTok{\}}
+
+\NormalTok{purrr}\SpecialCharTok{::}\FunctionTok{iwalk}\NormalTok{(one\_hot\_mats, split\_and\_save)}
+\end{Highlighting}
+\end{Shaded}
+
+\subsection{9) Before/After Quality
+Snapshot}\label{beforeafter-quality-snapshot}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Missingness after cleaning}
+\NormalTok{clean\_missing\_reports }\OtherTok{\textless{}{-}}\NormalTok{ purrr}\SpecialCharTok{::}\FunctionTok{imap}\NormalTok{(df\_clean, }\SpecialCharTok{\textasciitilde{}}\FunctionTok{tibble}\NormalTok{(}
+  \AttributeTok{Dataset    =}\NormalTok{ .y,}
+  \AttributeTok{MissingTot =} \FunctionTok{sum}\NormalTok{(}\FunctionTok{sapply}\NormalTok{(.x, }\ControlFlowTok{function}\NormalTok{(c) }\FunctionTok{sum}\NormalTok{(}\FunctionTok{is.na}\NormalTok{(c)))),}
+  \AttributeTok{Rows       =} \FunctionTok{nrow}\NormalTok{(.x)}
+\NormalTok{))}
+\NormalTok{knitr}\SpecialCharTok{::}\FunctionTok{kable}\NormalTok{(clean\_missing\_reports, }\AttributeTok{caption =} \StringTok{"Missingness After Cleaning (Total NA counts)"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{table}
+\caption{\label{tab:quality-snapshot}Missingness After Cleaning (Total NA counts)}
+
+\centering
+\begin{tabular}[t]{l|r|r}
+\hline
+Dataset & MissingTot & Rows\\
+\hline
+Anthropometry & 0 & 38\\
+\hline
+\end{tabular}
+\centering
+\begin{tabular}[t]{l|r|r}
+\hline
+Dataset & MissingTot & Rows\\
+\hline
+Literacy & 0 & 21\\
+\hline
+\end{tabular}
+\centering
+\begin{tabular}[t]{l|r|r}
+\hline
+Dataset & MissingTot & Rows\\
+\hline
+MaternalMortality & 0 & 22\\
+\hline
+\end{tabular}
+\centering
+\begin{tabular}[t]{l|r|r}
+\hline
+Dataset & MissingTot & Rows\\
+\hline
+ARI\_Symptoms & 0 & 27\\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Outliers (IQR) count on Value\_num (pre{-}winsor) if present}
+\NormalTok{iqr\_flags }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(x)\{}
+\NormalTok{  q1 }\OtherTok{\textless{}{-}} \FunctionTok{quantile}\NormalTok{(x, }\FloatTok{0.25}\NormalTok{, }\AttributeTok{na.rm=}\ConstantTok{TRUE}\NormalTok{); q3 }\OtherTok{\textless{}{-}} \FunctionTok{quantile}\NormalTok{(x, }\FloatTok{0.75}\NormalTok{, }\AttributeTok{na.rm=}\ConstantTok{TRUE}\NormalTok{); i }\OtherTok{\textless{}{-}}\NormalTok{ q3}\SpecialCharTok{{-}}\NormalTok{q1}
+\NormalTok{  (x }\SpecialCharTok{\textless{}}\NormalTok{ (q1 }\SpecialCharTok{{-}} \FloatTok{1.5}\SpecialCharTok{*}\NormalTok{i)) }\SpecialCharTok{|}\NormalTok{ (x }\SpecialCharTok{\textgreater{}}\NormalTok{ (q3 }\SpecialCharTok{+} \FloatTok{1.5}\SpecialCharTok{*}\NormalTok{i))}
+\NormalTok{\}}
+\NormalTok{outlier\_report }\OtherTok{\textless{}{-}}\NormalTok{ purrr}\SpecialCharTok{::}\FunctionTok{imap\_dfr}\NormalTok{(df\_clean, }\ControlFlowTok{function}\NormalTok{(df, nm)\{}
+  \ControlFlowTok{if}\NormalTok{ (}\SpecialCharTok{!}\StringTok{"Value\_num"} \SpecialCharTok{\%in\%} \FunctionTok{names}\NormalTok{(df)) }\FunctionTok{return}\NormalTok{(}\FunctionTok{tibble}\NormalTok{(}\AttributeTok{Dataset =}\NormalTok{ nm, }\AttributeTok{Outliers\_Value\_num =} \ConstantTok{NA\_integer\_}\NormalTok{))}
+  \FunctionTok{tibble}\NormalTok{(}\AttributeTok{Dataset =}\NormalTok{ nm, }\AttributeTok{Outliers\_Value\_num =} \FunctionTok{sum}\NormalTok{(}\FunctionTok{iqr\_flags}\NormalTok{(df}\SpecialCharTok{$}\NormalTok{Value\_num), }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{))}
+\NormalTok{\})}
+\NormalTok{knitr}\SpecialCharTok{::}\FunctionTok{kable}\NormalTok{(outlier\_report, }\AttributeTok{caption =} \StringTok{"Outliers (IQR) Count on Value\_num (Pre{-}Winsor)"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}lr@{}}
+\caption{Outliers (IQR) Count on Value\_num (Pre-Winsor)}\tabularnewline
+\toprule\noalign{}
+Dataset & Outliers\_Value\_num \\
+\midrule\noalign{}
+\endfirsthead
+\toprule\noalign{}
+Dataset & Outliers\_Value\_num \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Anthropometry & 8 \\
+Literacy & 4 \\
+MaternalMortality & 4 \\
+ARI\_Symptoms & 0 \\
+\end{longtable}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{cat}\NormalTok{(}\StringTok{"}\SpecialCharTok{\textbackslash{}n}\StringTok{Milestone 2 complete.}\SpecialCharTok{\textbackslash{}n}\StringTok{Clean csv outputs written to: "}\NormalTok{, }\FunctionTok{normalizePath}\NormalTok{(out\_dir), }\StringTok{"}\SpecialCharTok{\textbackslash{}n}\StringTok{Training data outputs written to: "}\NormalTok{, }\FunctionTok{normalizePath}\NormalTok{(train\_out\_dir), }\StringTok{"}\SpecialCharTok{\textbackslash{}n}\StringTok{Testing data outputs written to: "}\NormalTok{, }\FunctionTok{normalizePath}\NormalTok{(test\_out\_dir), }\StringTok{"}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Milestone 2 complete.
+## Clean csv outputs written to:  C:\Users\andil\OneDrive\Documents\BC Docs\Third year\WPR371\Project\BIN371-Project\Milestone 2\Clean-csv_m2 
+## Training data outputs written to:  C:\Users\andil\OneDrive\Documents\BC Docs\Third year\WPR371\Project\BIN371-Project\Milestone 2\Training-data_m2 
+## Testing data outputs written to:  C:\Users\andil\OneDrive\Documents\BC Docs\Third year\WPR371\Project\BIN371-Project\Milestone 2\Test-data_m2
+\end{verbatim}
+
+\end{document}

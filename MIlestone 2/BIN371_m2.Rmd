@@ -19,7 +19,7 @@ This document completes Milestone 2 by:
 - Running feature selection tests (Attribute/Feature Selection)
 - Transformations, one-hot matrices, and 70/30 splits (Transformations & Aggregation)
 
-All outputs go to `outputs_m2/`.
+All outputs go to `outputs_m2/`, 'testdata_m2/'. 'traindata_m2/'.
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
@@ -32,21 +32,26 @@ suppressWarnings(suppressMessages({
 ## 2) Load Data
 
 ```{r load-data}
-# Adjust paths if your CSVs live elsewhere
 paths <- list(
-  Anthropometry     = "anthropometry_national_zaf.csv",
-  Literacy          = "literacy_national_zaf.csv",
-  MaternalMortality = "maternal-mortality_national_zaf.csv",
-  ARI_Symptoms      = "symptoms-of-acute-respiratory-infection-ari_national_zaf.csv"
+  Anthropometry     = "Datasets/anthropometry_national_zaf.csv",
+  Literacy          = "Datasets/literacy_national_zaf.csv",
+  MaternalMortality = "Datasets/maternal-mortality_national_zaf.csv",
+  ARI_Symptoms      = "Datasets/symptoms-of-acute-respiratory-infection-ari_national_zaf.csv"
 )
 
 read_base <- function(p) read.csv(p, stringsAsFactors = FALSE, check.names = FALSE)
 df_list_raw <- lapply(paths, read_base)
 names(df_list_raw) <- names(paths)
 
-# Output directory
-out_dir <- "outputs_m2"
+# Output directories
+out_dir <- "Clean-csv_m2"
 if (!dir.exists(out_dir)) dir.create(out_dir, recursive = TRUE)
+
+test_out_dir <- "Test-data_m2"
+if (!dir.exists(test_out_dir)) dir.create(test_out_dir, recursive = TRUE)
+
+train_out_dir <- "Training-data_m2"
+if (!dir.exists(train_out_dir)) dir.create(train_out_dir, recursive = TRUE)
 ```
 
 ## 3) Standardize Columns & Create `Value_num`
@@ -66,7 +71,6 @@ clean_df <- function(df){
 
 df_list <- lapply(df_list_raw, clean_df)
 
-# Quick sanity: which datasets had non-numeric Value originally?
 for (nm in names(df_list)) {
   df <- df_list[[nm]]
   if ("Value" %in% names(df)) {
@@ -96,9 +100,6 @@ knitr::kable(col_preview, caption = "Column Preview (First 8 per Dataset)")
 ```
 
 ## 5) Data Selection (Inclusion/Exclusion Rules)
-
-**Keep (if present):** `Indicator`, `Value`, `Value_num`, `Sex`, `Age`, `Region`, `Period`, `Subgroup`.  
-**Drop:** free-text/comments, near-constant columns, and fields with **>40% missing** (unless essential).
 
 ```{r select-columns}
 keep_cols <- c("Indicator","Value","Value_num","Sex","Age","Region","Period","Subgroup")
@@ -135,16 +136,10 @@ knitr::kable(head(missing_overview, 30), caption = "Missingness Overview (Top 30
 
 ## 6) Data Cleaning Process
 
-- Remove exact duplicates  
-- Impute `Value_num` by median within `(Indicator × Sex)` → then `Indicator` → global fallback  
-- Optional winsorization of `Value_num` at 1st/99th percentiles  
-- Cast categorical fields to factors; build `Value_scaled`
-
 ```{r clean-data}
-# 6.1 Remove exact duplicates
+
 df_clean <- lapply(df_sel, function(df) df[!duplicated(df), , drop = FALSE])
 
-# 6.2 Impute Value_num
 impute_group_median <- function(df) {
   if (!"Value_num" %in% names(df)) return(df)
   # by Indicator x Sex
@@ -174,7 +169,7 @@ impute_group_median <- function(df) {
 }
 df_clean <- lapply(df_clean, impute_group_median)
 
-# 6.3 Winsorize (optional)
+#Winsorize 
 winsorize <- function(x, p = c(0.01, 0.99)){
   qs <- quantile(x, probs = p, na.rm = TRUE)
   x <- pmax(x, qs[1]); x <- pmin(x, qs[2]); x
@@ -186,7 +181,7 @@ df_clean <- lapply(df_clean, function(df){
   df
 })
 
-# 6.4 Cast factors & scale
+#Cast factors & scale
 prep_factors_scale <- function(df){
   for (v in c("Sex","Age","Region","Subgroup","Indicator","Period")){
     if (v %in% names(df)) df[[v]] <- as.factor(df[[v]])
@@ -200,24 +195,18 @@ prep_factors_scale <- function(df){
 }
 df_clean <- lapply(df_clean, prep_factors_scale)
 
-# Save interim cleaned CSVs
 purrr::iwalk(df_clean, ~write.csv(.x, file.path(out_dir, paste0("clean_", .y, ".csv")), row.names = FALSE))
 ```
 
 ## 7) Attribute / Feature Selection
 
-- **Spearman** for numeric predictors vs `Value_scaled` (robust if none exist)  
-- **Kruskal–Wallis** for categorical predictors vs `Value_scaled`  
-- Optionally create `Period_num` as a numeric proxy to have at least one numeric predictor
-
 ```{r feature-selection}
-# Helper: numeric predictors (excluding target variants)
+
 num_preds <- function(df){
   nums <- names(df)[sapply(df, is.numeric)]
   setdiff(nums, c("Value_num","Value_winz","Value_scaled"))
 }
 
-# OPTIONAL numeric 'Period_num' to enable at least one numeric predictor
 df_clean <- lapply(df_clean, function(df){
   if ("Period" %in% names(df) && !("Period_num" %in% names(df))) {
     df$Period_num <- as.numeric(df$Period)  # encoded levels; interpret cautiously
@@ -225,7 +214,7 @@ df_clean <- lapply(df_clean, function(df){
   df
 })
 
-# Spearman (robust to empty results)
+# Spearman 
 spearman_report <- function(df, name){
   out <- tibble()
   if ("Value_scaled" %in% names(df)) {
@@ -253,7 +242,7 @@ if ("P" %in% names(spearman_all) && any(!is.na(spearman_all$P))) {
                caption = "Spearman results (none available — no eligible numeric predictors)")
 }
 
-# Kruskal–Wallis (categorical vs Value_scaled)
+# Kruskal–Wallis 
 kw_report <- function(df, name){
   out <- tibble()
   if ("Value_scaled" %in% names(df)) {
@@ -281,7 +270,7 @@ if ("P" %in% names(kw_all) && any(!is.na(kw_all$P))) {
 ## 8) Transformations & Split (One-Hot + 70/30)
 
 ```{r transform-and-split}
-# One-hot encode via model.matrix; Value_scaled is the numeric response proxy
+
 one_hot_mats <- lapply(df_clean, function(df){
   if (!"Value_scaled" %in% names(df)) return(NULL)
   mm <- model.matrix(Value_scaled ~ . - Value - Value_num - Value_winz, data = df)
@@ -294,7 +283,6 @@ one_hot_mats <- lapply(df_clean, function(df){
 dir.create(out_dir, showWarnings = FALSE)
 set.seed(42)
 
-# NOTE: iwalk passes (value, name), so function must be (mat_list, name)
 split_and_save <- function(mat_list, name){
   if (is.null(mat_list)) return(invisible(NULL))
   n <- length(mat_list$y)
@@ -302,8 +290,8 @@ split_and_save <- function(mat_list, name){
   idx <- sample(seq_len(n), size = max(1, floor(0.7 * n)))
   train <- list(X = mat_list$X[idx, , drop = FALSE], y = mat_list$y[idx])
   test  <- list(X = mat_list$X[-idx, , drop = FALSE], y = mat_list$y[-idx])
-  saveRDS(train, file.path(out_dir, paste0("train_", name, ".rds")))
-  saveRDS(test,  file.path(out_dir, paste0("test_",  name, ".rds")))
+  saveRDS(train, file.path(train_out_dir, paste0("train_", name, ".rds")))
+  saveRDS(test,  file.path(test_out_dir, paste0("test_",  name, ".rds")))
   invisible(TRUE)
 }
 
@@ -333,14 +321,8 @@ outlier_report <- purrr::imap_dfr(df_clean, function(df, nm){
 knitr::kable(outlier_report, caption = "Outliers (IQR) Count on Value_num (Pre-Winsor)")
 ```
 
-## 10) Submission Notes
 
-- Include this knitted report.
-- Include `outputs_m2/` contents:
-  - `clean_*.csv` (cleaned datasets)
-  - `train_*.rds` and `test_*.rds` (design matrices for Milestone 3)
-- In your write-up: explain rules, justify thresholds, and interpret the top factors (from KW / Spearman if any).
 
 ```{r done}
-cat("\nMilestone 2 complete.\nOutputs written to: ", normalizePath(out_dir), "\n")
+cat("\nMilestone 2 complete.\nClean csv outputs written to: ", normalizePath(out_dir), "\nTraining data outputs written to: ", normalizePath(train_out_dir), "\nTesting data outputs written to: ", normalizePath(test_out_dir), "\n")
 ```
