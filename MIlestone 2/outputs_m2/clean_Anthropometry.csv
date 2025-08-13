@@ -1,0 +1,39 @@
+"Indicator","Value","Value_num","Value_winz","Value_scaled"
+"#indicator+name","#indicator+value+num",13.3,13.3,-0.50568454485815
+"Children severely stunted","9.8",9.8,9.8,-0.508484730551696
+"Children stunted","27.4",27.4,27.4,-0.494403796778436
+"Mean height for age of children","-1.1",-1.1,-0.767,-0.516938891187039
+"Children severely wasted","0.6",0.6,0.6,-0.515845218660445
+"Children wasted","2.5",2.5,2.5,-0.514325117855377
+"Children overweight","13.3",13.3,13.3,-0.50568454485815
+"Mean weight for height of children","0.6",0.6,0.6,-0.515845218660445
+"Children severely underweight","1.1",1.1,1.1,-0.515445192132795
+"Children underweight","5.9",5.9,5.9,-0.511604937467361
+"Children overweight for their age","4.5",4.5,4.5,-0.512725011744779
+"Mean weight for age of children","-0.2",-0.2,-0.2,-0.516485261104684
+"Women with height below 145 cm","1.5",1.5,1.5,-0.515125170910676
+"Number of women","3272",3272,3272,2.10144834644415
+"Number of women (unweighted)","3405",3405,3355.79,2.16848479194764
+"Mean Body Mass Index (BMI) for women","28.3",28.3,28.3,-0.493683749028667
+"Women with normal BMI (18.5-24.9)","34.7",34.7,34.7,-0.488563409474755
+"Women who are thin according to BMI (<18.5)","3.1",3.1,3.1,-0.513845086022198
+"Women who are mildly thin according to BMI (17.0-18.4)","2.6",2.6,2.6,-0.514245112549847
+"Women who are moderately thin according to BMI (<17.0)","0.5",0.5,0.5,-0.515925223965975
+"Women who are overweight or obese according to BMI (>=25.0)","62.2",62.2,62.2,-0.466561950454037
+"Women who are overweight according to BMI (25.0-29.9)","26.3",26.3,26.3,-0.495283855139265
+"Women who are obese according to BMI (>=30.0)","35.9",35.9,35.9,-0.487603345808396
+"Number of women","3081",3081,3081,1.94863821288207
+"Number of women (unweighted)","3210",3210,3210,2.05184505701562
+"Men with height below 145 cm","0.3",0.3,0.3,-0.516085234577035
+"Number of men","3202",3202,3202,2.04544463257323
+"Number of men (unweighted)","3179",3179,3179,2.02704341230136
+"Mean Body Mass Index (BMI) for men","23",23,23,-0.497924030221751
+"Men with normal BMI (18.5-24.9)","65.2",65.2,65.2,-0.46416179128814
+"Men who are thin according to BMI (<18.5)","9.6",9.6,9.6,-0.508644741162755
+"Men who are mildly thin according to BMI (17.0-18.4)","7.4",7.4,7.4,-0.510404857884413
+"Men who are moderately thin according to BMI (<17.0)","2.2",2.2,2.2,-0.514565133771967
+"Men who are overweight or obese according to BMI (>=25.0)","25.1",25.1,25.1,-0.496243918805624
+"Men who are overweight according to BMI (25.0-29.9)","17.2",17.2,17.2,-0.502564337942484
+"Men who are obese according to BMI (>=30.0)","7.9",7.9,7.9,-0.510004831356763
+"Number of men","2336",2336,2336,1.35259868668444
+"Number of men (unweighted)","2457",2457,2457,1.4494051063756
