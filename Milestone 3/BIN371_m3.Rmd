@@ -126,7 +126,7 @@ evaluate_models <- function(models, df_test) {
 ```
 
 ## 4) Load Train/Test Splits
-note this will produce a ton of empty data, don't worry about it, that's just how these things go when converted to binary, there is a way to hide it in the code apparently but I'm lazy
+note this will produce a ton of empty data, don't worry about it, that's just how these things go when converted to binary, so I'm just hiding the results from being printed in the pdf, otherwise it'll generate like 50 pages worth of empty data
 
 ```{r load-rds, results='hide'}
 train_objs <- lapply(train_paths, readRDS)
