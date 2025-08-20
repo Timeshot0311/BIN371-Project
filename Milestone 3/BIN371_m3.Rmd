@@ -1,4 +1,4 @@
----
+ ---
 title: "BIN371_m3"
 output: pdf_document
 date: "2025-08-18"
@@ -28,12 +28,10 @@ set.seed(42)
 
 ## 2) Inputs & Paths
 
-Provide the absolute paths to your **Training** and **Test** folders (Windows paths may use forward slashes).
-
 ```{r paths}
 # --- where your train/test RDS live ---
-train_dir <- "C:/Users/Suhil Jugroop/OneDrive/Documents/GitHub/BIN371-Project/Milestone 3/Training-data_m2"
-test_dir  <- "C:/Users/Suhil Jugroop/OneDrive/Documents/GitHub/BIN371-Project/Milestone 3/Test-data_m2"
+train_dir <- "Training-data_m2"
+test_dir  <- "Test-data_m2"
 
 # --- resolve the directory of this Rmd (works in Knit and in the editor) ---
 rmd_path <- tryCatch(
@@ -126,7 +124,7 @@ evaluate_models <- function(models, df_test) {
 ```
 
 ## 4) Load Train/Test Splits
-note this will produce a ton of empty data, don't worry about it, that's just how these things go when converted to binary, so I'm just hiding the results from being printed in the pdf, otherwise it'll generate like 50 pages worth of empty data
+note this will produce a ton of empty data, don't worry about it, that's just how these things go when converted to binary, so we're just hiding the results from being printed in the pdf, otherwise it'll generate like 50 pages worth of empty data
 
 ```{r load-rds, results='hide'}
 train_objs <- lapply(train_paths, readRDS)
@@ -246,6 +244,10 @@ save_winner <- function(ds, model_label) {
   }
 }
 purrr::pwalk(list(best_models$Dataset, best_models$Best_Model), save_winner)
+
+#Saving for PowerBi
+write.csv(results_ranked, file.path(out_dir, "results_ranked.csv"), row.names = FALSE)
+write.csv(best_models,  file.path(out_dir, "best_models.csv"),  row.names = FALSE)
 ```
 
 ## 9) Rubric Coverage (place in report)

@@ -1,0 +1,13 @@
+"Model","RMSE","MAE","R2","Dataset","Rank"
+"Linear Regression",0.385617893683935,0.190558345926944,0.800628196959363,"ARI_Symptoms",1
+"Decision Tree",0.891625377718665,0.796881462778225,-0.0658945025085036,"ARI_Symptoms",2
+"Random Forest",NA,NA,1,"ARI_Symptoms",3
+"Decision Tree",0.861208278034803,0.74265946464323,-0.0469949585652341,"Anthropometry",1
+"Linear Regression",0.923813885915747,0.387152340567898,-0.204750654512422,"Anthropometry",2
+"Random Forest",NA,NA,1,"Anthropometry",3
+"Decision Tree",0.493839764209376,0.490302989384789,-0.113853263598968,"Literacy",1
+"Linear Regression",0.556079585088731,0.3071875432039,-0.412309145401336,"Literacy",2
+"Random Forest",NA,NA,1,"Literacy",3
+"Decision Tree",0.73191542264916,0.643233665841199,-0.00296698583940924,"MaternalMortality",1
+"Linear Regression",1.45260210312113,0.896458925516012,-2.95055559552566,"MaternalMortality",2
+"Random Forest",NA,NA,1,"MaternalMortality",3
